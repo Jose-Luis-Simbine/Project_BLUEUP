@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MySql" database="MySql" id="MySql-10ed" >
+	<schema name="dimencional" >
+		<table name="dim_cliente" row_count="0" spec="" >
+			<column name="sk_cliente" type="INT" jt="4" mandatory="y" />
+			<column name="nk_id_cliente" type="VARCHAR" length="20" jt="12" />
+			<column name="nm_cliente" type="VARCHAR" length="100" jt="12" />
+			<column name="nm_cidade_cliente" type="VARCHAR" length="50" jt="12" />
+			<column name="by_aceita_campanha" type="BINARY" length="1" jt="-2" />
+			<column name="desc_cep" type="VARCHAR" length="8" jt="12" />
+			<index name="pk_dim_cliente" unique="PRIMARY_KEY" >
+				<column name="sk_cliente" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci]]></options>
+		</table>
+		<table name="dim_localidade" row_count="0" spec="" >
+			<column name="sk_localidade" type="INT" jt="4" mandatory="y" />
+			<column name="nk_id_localidade" type="VARCHAR" length="20" jt="12" />
+			<column name="nm_localidade" type="VARCHAR" length="50" jt="12" />
+			<column name="nm_cidade_localidade" type="VARCHAR" length="50" jt="12" />
+			<column name="nm_regiao_localidade" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_dim_localidade" unique="PRIMARY_KEY" >
+				<column name="sk_localidade" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci]]></options>
+		</table>
+		<table name="dim_produto" row_count="0" spec="" >
+			<column name="sk_produto" type="INT" jt="4" mandatory="y" />
+			<column name="nk_id_produto" type="VARCHAR" length="20" jt="12" />
+			<column name="desc_sku" type="VARCHAR" length="50" jt="12" />
+			<column name="nm_produto" type="VARCHAR" length="50" jt="12" />
+			<column name="nm_categoria_produto" type="VARCHAR" length="30" jt="12" />
+			<column name="nm_marca_produto" type="VARCHAR" length="30" jt="12" />
+			<index name="pk_dim_produto" unique="PRIMARY_KEY" >
+				<column name="sk_produto" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci]]></options>
+		</table>
+		<table name="dim_tempo" row_count="0" spec="" >
+			<column name="sk_data" type="INT" jt="4" mandatory="y" />
+			<column name="data" type="DATETIME" jt="93" />
+			<column name="desc_data_completa" type="VARCHAR" length="50" jt="12" />
+			<column name="nr_ano" type="INT" jt="4" />
+			<column name="nm_trimestre" type="VARCHAR" length="30" jt="12" />
+			<column name="nr_mes" type="INT" jt="4" />
+			<column name="nm_mes" type="VARCHAR" length="30" jt="12" />
+			<column name="nr_semana" type="INT" jt="4" />
+			<column name="nm_ano_semana" type="VARCHAR" length="30" jt="12" />
+			<column name="nr_dia" type="INT" jt="4" />
+			<column name="nm_dia_da_semana" type="VARCHAR" length="30" jt="12" />
+			<column name="flag_feriado" type="DATETIME" jt="93" />
+			<column name="nm_feriado" type="VARCHAR" length="30" jt="12" />
+			<index name="pk_dim_tempo" unique="PRIMARY_KEY" >
+				<column name="sk_data" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci]]></options>
+		</table>
+		<table name="fato_venda" prior="fato_venda2" >
+			<column name="sk_cliente" type="INT" jt="4" mandatory="y" />
+			<column name="sk_produto" type="INT" jt="4" mandatory="y" />
+			<column name="sk_localidade" type="INT" jt="4" mandatory="y" />
+			<column name="sk_data" type="INT" jt="4" mandatory="y" />
+			<column name="valor_venda" type="FLOAT" jt="7" />
+			<column name="quantidade_venda" type="INT" jt="4" />
+			<index name="pk_fato_venda2" unique="PRIMARY_KEY" >
+				<column name="sk_cliente" />
+				<column name="sk_produto" />
+				<column name="sk_localidade" />
+				<column name="sk_data" />
+			</index>
+			<fk name="fk_fato_venda2_dim_cliente" to_schema="dimencional" to_table="dim_cliente" delete_action="cascade" update_action="cascade" >
+				<fk_column name="sk_cliente" pk="sk_cliente" />
+			</fk>
+			<fk name="fk_fato_venda2_dim_localidade" to_schema="dimencional" to_table="dim_localidade" delete_action="cascade" update_action="cascade" >
+				<fk_column name="sk_localidade" pk="sk_localidade" />
+			</fk>
+			<fk name="fk_fato_venda2_dim_tempo" to_schema="dimencional" to_table="dim_tempo" delete_action="cascade" update_action="cascade" >
+				<fk_column name="sk_data" pk="sk_data" />
+			</fk>
+			<fk name="fk_fato_venda_dim_produto" to_schema="dimencional" to_table="dim_produto" delete_action="cascade" update_action="cascade" >
+				<fk_column name="sk_produto" pk="sk_produto" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+	</schema>
+	<layout name="ModeloLogicoDimencional" id="Layout-9d" show_relation="columns" >
+		<comment><![CDATA[ModeloLogicoDimencional]]></comment>
+		<entity schema="dimencional" name="dim_cliente" color="BED3F4" x="336" y="160" />
+		<entity schema="dimencional" name="dim_localidade" color="BED3F4" x="48" y="368" />
+		<entity schema="dimencional" name="dim_produto" color="BED3F4" x="336" y="576" />
+		<entity schema="dimencional" name="dim_tempo" color="BED3F4" x="640" y="368" />
+		<entity schema="dimencional" name="fato_venda" color="C1D8EE" x="352" y="368" />
+		<callout x="48" y="80" pointer="Round" >
+			<comment><![CDATA[Modelo Logico Dimencional]]></comment>
+		</callout>
+		<group name="dim_cliente" color="ECF0F7" >
+			<entity schema="dimencional" name="dim_produto" />
+			<entity schema="dimencional" name="dim_tempo" />
+			<entity schema="dimencional" name="dim_cliente" />
+			<entity schema="dimencional" name="dim_localidade" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-17e6" show_column_type="y" show_relation="columns" >
+		<entity schema="dimencional" name="dim_cliente" color="BED3F4" x="640" y="48" />
+		<entity schema="dimencional" name="dim_localidade" color="BED3F4" x="48" y="64" />
+		<entity schema="dimencional" name="dim_produto" color="BED3F4" x="640" y="288" />
+		<entity schema="dimencional" name="dim_tempo" color="BED3F4" x="304" y="288" />
+		<script name="SQL Editor" id="Editor-1175" language="SQL" >
+			<string><![CDATA[SELECT
+	sk_cliente, sk_produto, sk_localidade, sk_data, valor_venda, quantidade_venda
+FROM
+	dimencional.fato_venda a;]]></string>
+		</script>
+		<query id="Query-c03" name="Query Builder" >
+			<query_table schema="dimencional" name="dim_cliente" alias="dc" x="48" y="48" >
+				<column name="sk_cliente" />
+				<column name="nk_id_cliente" />
+				<column name="nm_cliente" />
+				<column name="nm_cidade_cliente" />
+				<column name="by_aceita_campanha" />
+				<column name="desc_cep" />
+			</query_table>
+		</query>
+	</layout>
+</project>

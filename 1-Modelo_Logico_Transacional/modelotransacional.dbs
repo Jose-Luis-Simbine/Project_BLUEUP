@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MySql" database="MySql" id="MySql-1c17" >
+	<schema name="transacional" >
+		<table name="categoria" prior="tbl" >
+			<column name="id_categoria" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="nome_categoria" type="VARCHAR" length="30" jt="12" />
+			<index name="pk_categoria" unique="PRIMARY_KEY" >
+				<column name="id_categoria" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="cliente" prior="n" >
+			<column name="id_cliente" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="nome_cliente" type="VARCHAR" length="100" jt="12" />
+			<column name="email_cliente" type="VARCHAR" length="30" jt="12" />
+			<column name="data_nascimento" type="DATETIME" jt="93" />
+			<column name="aceita_campanha" type="BINARY" length="1" jt="-2" />
+			<index name="pk_cliente" unique="PRIMARY_KEY" >
+				<column name="id_cliente" />
+			</index>
+			<index name="unq_cliente_aceita_campanha" unique="UNIQUE_KEY" >
+				<column name="aceita_campanha" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="endereco" prior="endere" >
+			<column name="id_endereco" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="logradouro" type="VARCHAR" length="30" jt="12" />
+			<column name="numero" type="VARCHAR" length="20" jt="12" />
+			<column name="cidade" type="VARCHAR" length="50" jt="12" />
+			<column name="estado" type="VARCHAR" length="10" jt="12" />
+			<column name="pais" type="VARCHAR" length="20" jt="12" />
+			<column name="cep" type="VARCHAR" length="8" jt="12" />
+			<column name="id_cliente" type="VARCHAR" length="20" jt="12" />
+			<index name="pk_endereco" unique="PRIMARY_KEY" >
+				<column name="id_endereco" />
+			</index>
+			<fk name="fk_endereco_cliente" to_schema="transacional" to_table="cliente" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_cliente" pk="id_cliente" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="funcionario" prior="funcionar" >
+			<column name="id_funcionario" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="nome_funcionario" type="VARCHAR" length="30" jt="12" />
+			<column name="especialidade" type="VARCHAR" length="50" jt="12" />
+			<column name="id_localidade" type="VARCHAR" length="20" jt="12" />
+			<index name="pk_funcionario" unique="PRIMARY_KEY" >
+				<column name="id_funcionario" />
+			</index>
+			<fk name="fk_funcionario_localidade" to_schema="transacional" to_table="localidade" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_localidade" pk="id_localidade" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="inventario" prior="tbl" >
+			<column name="id_inventario" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="data_entrada_inventario" prior="funcionario" type="DATETIME" jt="93" />
+			<column name="id_localidade" type="VARCHAR" length="20" jt="12" />
+			<column name="id_produto" type="VARCHAR" length="20" jt="12" />
+			<index name="pk_inventario" unique="PRIMARY_KEY" >
+				<column name="id_inventario" />
+			</index>
+			<fk name="fk_inventario_produto" to_schema="transacional" to_table="produto" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_produto" pk="id_produto" />
+			</fk>
+			<fk name="fk_inventario_localidade" to_schema="transacional" to_table="localidade" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_localidade" pk="id_localidade" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="item_produto" prior="i" >
+			<column name="id_item" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="nome_item" type="VARCHAR" length="30" jt="12" />
+			<column name="marca_produto" prior="marca" type="VARCHAR" length="30" jt="12" />
+			<column name="largura" type="FLOAT" jt="7" />
+			<column name="altura" type="FLOAT" jt="7" />
+			<column name="termos_garantia" type="VARCHAR" length="200" jt="12" />
+			<column name="id_produto" type="VARCHAR" length="20" jt="12" />
+			<column name="id_categoria" type="VARCHAR" length="20" jt="12" />
+			<index name="pk_item_produto" unique="PRIMARY_KEY" >
+				<column name="id_item" />
+			</index>
+			<fk name="fk_item_produto_produto" to_schema="transacional" to_table="produto" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_produto" pk="id_produto" />
+			</fk>
+			<fk name="fk_item_produto_categoria" to_schema="transacional" to_table="categoria" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_categoria" pk="id_categoria" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="localidade" prior="endereco_0" >
+			<column name="id_localidade" prior="id_endereco" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="nome_localidade" type="VARCHAR" length="20" jt="12" />
+			<column name="logradouro" type="VARCHAR" length="30" jt="12" />
+			<column name="numero" type="VARCHAR" length="20" jt="12" />
+			<column name="cidade" type="VARCHAR" length="30" jt="12" />
+			<column name="estado" type="VARCHAR" length="10" jt="12" />
+			<column name="pais" type="VARCHAR" length="20" jt="12" />
+			<column name="cep" type="VARCHAR" length="10" jt="12" />
+			<index name="pk_localidade" unique="PRIMARY_KEY" >
+				<column name="id_localidade" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="produto" prior="tbl" >
+			<column name="id_produto" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="sku" type="VARCHAR" length="50" jt="12" />
+			<column name="nome_produto" type="VARCHAR" length="50" jt="12" />
+			<index name="pk_produto" unique="PRIMARY_KEY" >
+				<column name="id_produto" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="venda" prior="tbl" >
+			<column name="id_transacao" type="VARCHAR" length="50" jt="12" mandatory="y" />
+			<column name="data_transacao" type="DATETIME" jt="93" />
+			<column name="valor_venda" type="FLOAT" jt="7" />
+			<column name="quantidade_venda" type="INT" jt="4" />
+			<column name="tipo_pagamento" type="VARCHAR" length="20" jt="12" />
+			<column name="id_cliente" type="VARCHAR" length="20" jt="12" />
+			<column name="id_produto" type="VARCHAR" length="20" jt="12" />
+			<column name="id_funcionario" type="VARCHAR" length="20" jt="12" />
+			<column name="id_localidade" type="VARCHAR" length="20" jt="12" />
+			<index name="pk_venda" unique="PRIMARY_KEY" >
+				<column name="id_transacao" />
+			</index>
+			<fk name="fk_venda_cliente" to_schema="transacional" to_table="cliente" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_cliente" pk="id_cliente" />
+			</fk>
+			<fk name="fk_venda_produto" to_schema="transacional" to_table="produto" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_produto" pk="id_produto" />
+			</fk>
+			<fk name="fk_venda_funcionario" to_schema="transacional" to_table="funcionario" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_funcionario" pk="id_funcionario" />
+			</fk>
+			<fk name="fk_venda_localidade" to_schema="transacional" to_table="localidade" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id_localidade" pk="id_localidade" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+	</schema>
+	<layout name="Main Layout" id="Layout-1d29" show_relation="columns" >
+		<comment><![CDATA[ModeloLogicoTransacional]]></comment>
+		<entity schema="transacional" name="categoria" color="C1D8EE" x="80" y="640" />
+		<entity schema="transacional" name="cliente" color="C1D8EE" x="80" y="128" />
+		<entity schema="transacional" name="endereco" color="C1D8EE" x="80" y="368" />
+		<entity schema="transacional" name="funcionario" color="C1D8EE" x="480" y="128" />
+		<entity schema="transacional" name="inventario" color="C1D8EE" x="880" y="352" />
+		<entity schema="transacional" name="item_produto" color="C1D8EE" x="896" y="640" />
+		<entity schema="transacional" name="localidade" color="3986C1" x="880" y="96" />
+		<entity schema="transacional" name="produto" color="C1D8EE" x="464" y="640" />
+		<entity schema="transacional" name="venda" color="C1D8EE" x="512" y="336" />
+		<callout x="48" y="48" pointer="Round" >
+			<comment><![CDATA[Modelo logico transacional]]></comment>
+		</callout>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-72d" show_column_type="y" show_relation="columns" >
+		<script name="SQL Editor" id="Editor-1f0d" language="SQL" >
+			<string><![CDATA[SELECT
+	id_cliente, nome_cliente, email_cliente, data_nascimeto
+FROM
+	transacional.clientes s;]]></string>
+		</script>
+	</layout>
+</project>
